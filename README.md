@@ -46,8 +46,7 @@ Please start by forking the repository, and choose one or or more of the challen
 You may enter your contribution by opening up a pull request. Feel free to improve the application where needed.
 
 We would like to propose the following challenges:
-
-If you feel you have a better idea, we're looking forward to your pull request!
+_( If you feel you have a better idea, we're looking forward to your pull request! )_
 
 ### 1. Improve password hints
 
