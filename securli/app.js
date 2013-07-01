@@ -57,7 +57,7 @@ app.get('/success/:id', function(req, res) {
 
 app.get('/delete/:id', function(req, res) {
 
-    Message.delete( req.params.id, function( err, data ){
+    Message.delete( req.params.id, function( err ){
         if( err ){
             res.redirect( '/error' );
             return;

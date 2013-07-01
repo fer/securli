@@ -2,7 +2,7 @@ var Email = require('email').Email,
     util = require('util');
 
 var Mail = function(message, to, req) {
-    var email, body, link, from;
+    var body, link, from;
 
     link = util.format('http://%s/view/%s', req.host, message.id);
     from = 'no-reply@' + req.host;
@@ -25,6 +25,6 @@ var Mail = function(message, to, req) {
 
         email.send(fnReady);
     };
-}
+};
 
 module.exports = Mail;

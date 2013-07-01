@@ -1,6 +1,5 @@
 var assert = require('assert'),
     fs = require('fs'),
-    path = require('path'),
     Message = require('model/message');
 
 
@@ -26,7 +25,7 @@ suite('model message', function() {
             assert.equal(json.message, data.message, 'created valid json');
 
             fs.unlink(path, done);
-        })
+        });
     });
 
     test('load must load and parse json', function(done) {
@@ -86,4 +85,4 @@ suite('model message', function() {
         });
     });
 
-})
+});
