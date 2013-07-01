@@ -1,0 +1,13 @@
+{
+    "browser": true,
+    "node": true,
+    "jquery": true,
+    "nonstandard": true,
+    "undef": true,
+    "unused": true,
+    "globals": {
+        "test": true,
+        "suite": true
+    }
+
+}
