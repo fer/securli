@@ -25,7 +25,7 @@ Run tests with:
 Indent is 4 spaces, use `;`, single quotes, 80 chars, _jadidija_.
 _( learn and live to accept the beautifier. )_
 
-Make sure to run the beatifier and hinter before each commit:
+Make sure to run the beautifier and hinter before each commit:
 
     npm run-script tidy
     npm run-script jshint
@@ -39,8 +39,8 @@ to see the results.
 
 ## Challenge
 
-Whatser is looking for a javascript engineer. This app is part of a coding challenge for our hiring process.
-We hope to have created a fun project to hack on, and find out wether we're a good match :-)
+Whatser is looking for a javascript engineer. This app is part of a coding challenge in our hiring process.
+We hope to have created a fun project to hack on, and find out whether we're a good match :-)
 
 Please start by forking the repository, and choose one or or more of the challenges described below.
 You may enter your contribution by opening up a pull request. Feel free to improve the application where needed.
@@ -64,9 +64,9 @@ Also provide feedback to the user about the strength of the password.
 #### 2. Password validity check
 Our users often make the mistake of mistyping their password. Add a check that prevents this mistake from happening.
 
-### 2. REST api
+### 2. REST API
 
-We would like to create an api service to accomodate our app. Create simple a `REST` api using the REST Verbs `GET`, `POST`, `DELETE`, exposing the current functionality: delete, create and view a message.
+We would like to create an API service to accommodate our app. Create simple a `REST` API using the REST Verbs `GET`, `POST`, `DELETE`, exposing the current functionality: delete, create and view a message.
 Bonus points: supply small reference client examples using `curl` or the `request` library from npm.
 
 ### 3. Scaling the persistence layer
@@ -85,4 +85,4 @@ We would like to start offering a better service to our users, by allowing them 
 
 ### 6. Sending updates
 
-Add a feature to the application, so that the creator of a message gets a copy of the email sent to the recepient, and receives an update when the message has been read.
+Add a feature to the application, so that the creator of a message gets a copy of the email sent to the recipient, and receives an update when the message has been read.
