@@ -22,24 +22,39 @@
             <textarea maxlength="140" id="msg" placeholder="Type your message here"></textarea>
             <input id="message" value="" type="hidden" name="message" />
             <div>
-              <em>hint: use a password that is long, and contains at least some spaces and numbers!</em>
-              <br/>
-              <br/>
-            </div>
-            <div>
-                <input class="btn" id="btn-encrypt" onclick="encrypt(); return false;" type="submit" value="encrypt" />
+                <input class="btn" id="btn-encrypt" onclick="validate_form(); return false;" type="submit" value="encrypt" />
                 <input class="btn" id="btn-send" type="submit" value="send messsage" disabled="disabled" />
             </div>
         </div>
-        
     </form>
+
+	<!-- Modal -->
+	<div id="passwordModal" class="modal hide fade">
+	  <div class="modal-header">
+	    <h3>Please enter a secure password</h3>
+	  </div>
+	  <div class="modal-body">
+		<div class="control-group">
+		  <label class="control-label" for="inputPassword">Password</label>
+		  <div class="controls">
+		    <input type="password" id="inputPassword" placeholder="Password">
+		  </div>
+		</div>
+	    <em>hint: use a password that is long, and contains at least some spaces and numbers!</em>    
+	  </div>
+	  <div class="modal-footer">
+	    <button id="btn-modal-cancel" class="btn" data-dismiss="modal">Cancel</button>
+	    <button id="btn-modal-encrypt" onclick="encrypt(); return false;" class="btn btn-primary">Encrypt</button>
+	  </div>
+	</div>
+	
     <script src="/javascripts/jquery-2.0.2.js"></script>
     <script src="/javascripts/sjcl.js"></script>
+	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script>
 
-        function encrypt() {
-            var encrypted, password,
-                $secret = $('#msg');
+        function validate_form() {
+            var $secret = $('#msg');
                 
             if( ! /\w+\@\w+[.]\w+/.test($('#to').val() ) ){
               alert('Please provide a valid e-mail to send to!');
@@ -55,16 +70,27 @@
               alert('The message you typed is too short!');
               return;
             }
+			
+			$("#passwordModal").modal("show");
+			$("#inputPassword").val("");
+			
+        }
 
-            password = prompt('please enter a secure password'),
-
+		function encrypt() {
+            var encrypted, password,
+                $secret = $('#msg');
+						
+			password = $("#inputPassword").val(),
             encrypted = sjcl.encrypt( password, $secret.val() );
+			
             $secret.val( $secret.val().replace(/./g, '*' ) );
             
             $('#message').val(encrypted);
             $('#btn-encrypt').attr('disabled', true );
             $('#btn-send').removeAttr('disabled');            
-        }
+			$("#passwordModal").modal("hide");			
+		}
+		
     </script>
   </body>
 </html>
