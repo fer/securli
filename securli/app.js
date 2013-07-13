@@ -11,6 +11,8 @@ var COOKIE_SECRET = '83be60e3e0435fc2e07bc79fe84b4567',
     Mail = require('model/email'),
     path = require('path');
 
+var sjcl = require('./public/javascripts/sjcl.js');
+
 var app = express();
 
 // all environments
@@ -104,7 +106,7 @@ app.post('/', function(req, res) {
 
             email.send(function(err){
                 if( err ) {
-                    util.error( err, 'unknow error');
+                    util.error( err, 'unknown error');
                     res.redirect('/error');
                     return;
                 }
@@ -118,6 +120,142 @@ app.post('/', function(req, res) {
     }
 
     res.redirect('/?error=' + (req.body.message ? 'email' : 'message'));
+});
+
+
+
+/**
+ * REST API for messages
+ */
+
+// Creates & sends a encrypted message
+// returns id if valid
+// POST /api/message
+// (email, message, password)
+/*
+ Example:
+ > curl -X POST -H "email: fer@ferqwerty.com"  \
+                -H "message: Hire me, please"  \
+                -H "password: f3rn4nd0"        \
+                http://localhost:3000/api/message
+
+ Result:
+ {
+    "id": "50f8c264e91b7301abd15f5b4839d73b"
+ }
+*/
+
+app.post('/api/message', function(req, res) {
+    if ( ( 'email'    in req.headers) &&
+         ( 'message'  in req.headers) &&
+         ( 'password' in req.headers) )
+    {
+        // Check email format
+        if( ! /\w+\@\w+[.]\w+/.test( req.headers.email ) ){
+            res.json( 404, { "error" : 'Please provide a valid e-mail to send to!' } );
+            return;
+        }
+
+        if( req.headers.message.length > 140 ){
+            res.json( 404, { "error" : 'The message you typed is too long!' } );
+            return;
+        }
+
+        if( req.headers.message.length < 1 ){
+            res.json( 404, { "error" : 'The message you typed is too short!' } );
+            return;
+        }
+
+        util.log('creating new message for: ' + req.headers.email);
+
+        var encrypted = sjcl.encrypt( req.headers.password, req.headers.message );
+
+        Message.create( {"email" : req.headers.email, "message" : encrypted } , function(err, data) {
+            var email = new Mail( data, req.headers.email, req );
+
+            email.send(function(err){
+                if( err ) {
+                    util.error( err, 'unknow error');
+                    res.json( 404, { "error" : err } );
+                    return;
+                }
+
+                req.session.messageId = data.id;
+                res.json( { "id" : data.id } );
+            });
+        });
+
+        return;
+
+    } else {
+        res.json( { "error" : "Missing email/message/password!" } );
+        return;
+    }
+});
+
+// Gets message(id)
+// GET /api/message/:id
+// (password)
+/*
+ Example:
+ > curl -X GET -H "password: f3rn4nd0" \
+               http://localhost:3000/api/message/50f8c264e91b7301abd15f5b4839d73b
+
+ Result:
+ {
+    "id": "50f8c264e91b7301abd15f5b4839d73b",
+    "email": "fer@ferqwerty.com",
+    "message": "Hire me, please"
+ }
+*/
+
+app.get('/api/message/:id', function(req, res) {
+    if ('password' in req.headers) {
+        Message.load( req.params.id, function( err, data ){
+            var msg;
+
+            if( err ){
+                res.json( 404, { "error" : err } );
+                return;
+            }
+
+            try {
+                msg = sjcl.decrypt( req.headers.password, data.message );
+                res.json( { "id": req.params.id , "email" : data.email, "message" : msg } );
+                return;
+            }
+            catch(error) {
+                res.json( 404, { "error" : error } );
+                return;
+            }
+        });
+    } else {
+        res.json( 404, { "error" : "Missing password!" } );
+        return;
+    }
+});
+
+// Deletes message(id)
+// DELETE /api/message/:id
+/*
+ Example:
+ > curl -X DELETE http://localhost:3000/api/message/50f8c264e91b7301abd15f5b4839d73b
+
+ Result:
+ {
+    "message": "Message deleted with id: 50f8c264e91b7301abd15f5b4839d73b"
+ }
+*/
+app.delete('/api/message/:id', function(req, res) {
+    Message.delete( req.params.id, function( err ){
+        if( err ){
+            res.json( 404, { "error" : err } );
+            return;
+        }
+
+        res.json( { "message" : "Message deleted with id: " + req.params.id } );
+        return;
+    });
 });
 
 http.createServer(app).listen(app.get('port'), function() {
