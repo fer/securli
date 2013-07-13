@@ -35,19 +35,27 @@
 	  </div>
 	  <div class="modal-body">
 		<div class="control-group">
-		  <label class="control-label" for="inputPassword">Password</label>
-		  <div class="controls">
-		    <input type="password" id="inputPassword" placeholder="Password">
-		  </div>
+			<label class="control-label" for="inputPassword">Password</label>
+			<div class="controls">
+				<div class="row-fluid">
+					<div class="span6">
+						<input type="password" id="inputPassword" placeholder="Password">
+					</div>
+					<div class="span6">
+						<div class="progress">
+						<div id="strengthBar" class="bar"></div>
+					</div>
+				</div>
+				</div>
+			</div>
+			<em>hint: use a password that is long, and contains at least some spaces and numbers!</em>
 		</div>
-	    <em>hint: use a password that is long, and contains at least some spaces and numbers!</em>    
 	  </div>
 	  <div class="modal-footer">
 	    <button id="btn-modal-cancel" class="btn" data-dismiss="modal">Cancel</button>
 	    <button id="btn-modal-encrypt" onclick="encrypt(); return false;" class="btn btn-primary">Encrypt</button>
 	  </div>
 	</div>
-	
     <script src="/javascripts/jquery-2.0.2.js"></script>
     <script src="/javascripts/sjcl.js"></script>
 	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
@@ -76,21 +84,81 @@
 			
         }
 
+		function scorePassword(password){
+			var score_length = 1,
+				score_nonalpha = 0,
+				score_repetitions = 0,
+				score;
+
+			// add a point for each character beyond the 5th
+			if ( password.length >= 5 ) {
+				score_length = password.length - 5;
+			}
+
+			// more points for containing non-alpha chars
+			// (regex: spaces + restrict special characters)
+			if ( /[^a-zA-Z0-9]/.test(password) ) {
+				score_nonalpha = 1;
+			}
+
+			// no character is repeated more than twice
+			// (regex: detect 2 or more + backref)
+			if ( /(.)\1{2,}/.test(password) ) {
+				score_repetitions = 1;
+			}
+
+			// The better if the password:
+			// - is the longer (pref > 5)
+			// - includes a non alpha char
+			// - avoids char repetitions
+			score = Math.log(score_length) * 25 +
+					score_nonalpha         * 30 -
+					score_repetitions      * 20 ;
+
+			if ( password.length == 0) return 0;
+
+			if ( score <= 0 ) return 10
+
+			return score;
+		}
+
 		function encrypt() {
             var encrypted, password,
-                $secret = $('#msg');
+                $secret = $('#msg'),
+				$input_pass = $("#inputPassword");
 						
-			password = $("#inputPassword").val(),
+			password = $input_pass.val(),
             encrypted = sjcl.encrypt( password, $secret.val() );
 			
             $secret.val( $secret.val().replace(/./g, '*' ) );
             
             $('#message').val(encrypted);
             $('#btn-encrypt').attr('disabled', true );
-            $('#btn-send').removeAttr('disabled');            
-			$("#passwordModal").modal("hide");			
+            $('#btn-send').removeAttr('disabled');
+			$("#passwordModal").modal("hide");
 		}
-		
+
+		// checks password strength on keyup
+		$("#inputPassword").keyup(function(){
+			var status = "",
+				score = scorePassword($(this).val());
+
+			$("#strengthBar").removeClass();
+
+			if ( score >= 80 )
+				status = "bar bar-success";
+
+			if ( (score >= 40) && (score < 80) )
+				status = "bar bar-warning";
+
+			if ( score < 40 )
+				status = "bar bar-danger";
+
+			$("#strengthBar").addClass(status).css("width", score + "%");
+
+			// console.log("Score (%s): %s ",$(this).val(),  score);
+		});
+
     </script>
   </body>
 </html>
