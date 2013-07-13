@@ -1,3 +1,7 @@
 node_modules
 *.*project
 securli/storage/*json
+npm-debug.log
+securli/.idea/
+securli/atlassian-ide-plugin.xml			
+/securli/atlassian-ide-plugin.xml
