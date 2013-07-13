@@ -30,32 +30,33 @@
 
 	<!-- Modal -->
 	<div id="passwordModal" class="modal hide fade">
-	  <div class="modal-header">
-	    <h3>Please enter a secure password</h3>
-	  </div>
-	  <div class="modal-body">
-		<div class="control-group">
-			<label class="control-label" for="inputPassword">Password</label>
-			<div class="controls">
-				<div class="row-fluid">
-					<div class="span6">
-						<input type="password" id="inputPassword" placeholder="Password">
+		<div class="modal-header">
+			<h3>Please enter a secure password</h3>
+		</div>
+	  	<div class="modal-body">
+			<div class="control-group">
+				<label class="control-label" for="inputPassword">Password</label>
+				<div class="controls">
+					<div class="row-fluid">
+						<div class="span6">
+							<input type="password" id="inputPassword" placeholder="Password">
+						</div>
+						<div class="span6">
+							<div class="progress">
+								<div id="strengthBar" class="bar"></div>
+							</div>
+						</div>
 					</div>
-					<div class="span6">
-						<div class="progress">
-						<div id="strengthBar" class="bar"></div>
-					</div>
-				</div>
 				</div>
 			</div>
 			<em>hint: use a password that is long, and contains at least some spaces and numbers!</em>
 		</div>
-	  </div>
-	  <div class="modal-footer">
-	    <button id="btn-modal-cancel" class="btn" data-dismiss="modal">Cancel</button>
-	    <button id="btn-modal-encrypt" onclick="encrypt(); return false;" class="btn btn-primary">Encrypt</button>
-	  </div>
+		<div class="modal-footer">
+			<button id="btn-modal-cancel" class="btn" data-dismiss="modal">Cancel</button>
+			<button id="btn-modal-encrypt" onclick="encrypt(); return false;" class="btn btn-primary">Encrypt</button>
+		</div>
 	</div>
+
     <script src="/javascripts/jquery-2.0.2.js"></script>
     <script src="/javascripts/sjcl.js"></script>
 	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
