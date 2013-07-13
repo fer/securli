@@ -17,7 +17,6 @@
         <div>
             <label for="to">recipient:</label>
             <div>
-                <input id="to" name="email" type="email" placeholder="name@example.com" />
             </div>
             <textarea maxlength="140" id="msg" placeholder="Type your message here"></textarea>
             <input id="message" value="" type="hidden" name="message" />
