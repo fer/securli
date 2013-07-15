@@ -21,6 +21,12 @@
             </div>
             <textarea maxlength="140" id="msg" placeholder="Type your message here"></textarea>
             <input id="message" value="" type="hidden" name="message" />
+
+			<label for="expiration_date">Expiration date:</label>
+			<div>
+				<input id='expiration_date' name="expiration_date" type='date'>
+			</div>
+
             <div>
               <em>hint: use a password that is long, and contains at least some spaces and numbers!</em>
               <br/>
@@ -55,6 +61,11 @@
               alert('The message you typed is too short!');
               return;
             }
+
+			if ( ! /^\d{4}([./-])\d{2}\1\d{2}$/.test($("#expiration_date").val()) ) {
+				alert('Please provide a valid expiration date!');
+				return;
+			}
 
             password = prompt('please enter a secure password'),
 
