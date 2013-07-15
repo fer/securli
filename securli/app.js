@@ -74,11 +74,27 @@ app.get('/view/:id', function(req, res) {
             return;
         }
 
-        res.render('view', {
-            title: 'Securli',
-            id: req.params.id,
-            message: data.message
-        });
+        var today =  new Date();
+        var expiration =  new Date(data.expiration_date) ;
+
+        if ( today >=  expiration ) {
+            Message.delete( req.params.id, function( err ){
+                if( err ){
+                    res.redirect( '/error' );
+                    return;
+                }
+
+                res.render('error', {
+                    title: 'Securli - this message has expired'
+                });
+            });
+        } else {
+            res.render('view', {
+                title: 'Securli',
+                id: req.params.id,
+                message: data.message
+            });
+        }
     });
 });
 
