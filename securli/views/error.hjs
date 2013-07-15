@@ -8,7 +8,7 @@
   <body>
     <h1>{{ title }}</h1>
     <div class="alert alert-error">
-      <p>OUCH! something unexpected happend. The message you tried to view does not exist anymore!<p>
+      <p>OUCH! something unexpected happened. The message you tried to view does not exist anymore!<p>
     </div>
     <p><a href="/">&laquo back up</a></p>
   </body>
